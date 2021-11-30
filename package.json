@@ -1,0 +1,32 @@
+{
+  "name": "retro-backend",
+  "version": "0.0.1",
+  "description": "Backend API for ReTro - a personal productivity app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app",
+    "server": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mazleo/ReTro-BackEnd.git"
+  },
+  "keywords": [
+    "productivity",
+    "personal",
+    "project",
+    "management",
+    "timesheet",
+    "timetracking"
+  ],
+  "author": "Jonnelin Leonardo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mazleo/ReTro-BackEnd/issues"
+  },
+  "homepage": "https://github.com/mazleo/ReTro-BackEnd#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.15"
+  }
+}
