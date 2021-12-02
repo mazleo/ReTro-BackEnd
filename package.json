@@ -26,8 +26,10 @@
   },
   "homepage": "https://github.com/mazleo/ReTro-BackEnd#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "config": "^3.3.6",
     "express": "^4.17.1",
+    "express-jwt": "^6.1.0",
     "mongoose": "^6.0.14",
     "nodemon": "^2.0.15"
   }
