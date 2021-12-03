@@ -1,3 +1,8 @@
+/**
+ * EntityIdIndexer.js
+ * Model to keep track of entity indexes
+ */
+
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 

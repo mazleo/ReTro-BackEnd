@@ -1,3 +1,8 @@
+/** 
+ * entityIdIndexer.js
+ * Service for working with EntityIdIndexer data
+ */
+
 const mongoose = require('mongoose');
 const EntityIdIndexerModel = require('../model/EntityIdIndexer')
 
