@@ -17,7 +17,7 @@ const connectDatabase = () => {
     database.connect();
 }
 connectDatabase();
-app.use((req, res, next) => connectDatabase());
+
 
 app.listen(port, () => {
     console.log('[info] Listening in port ' + port + '...');
