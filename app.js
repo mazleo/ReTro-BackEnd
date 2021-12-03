@@ -12,8 +12,12 @@ const port = process.env.PORT || defaultPort;
 const morganFormat = config.get('morganFormat');
 app.use(morgan(morganFormat));
 
-mongoose.connection.on('error', error => database.handlePeriConnectionError(error));
-database.connect();
+const connectDatabase = () => {
+    mongoose.connection.on('error', error => database.handlePeriConnectionError(error));
+    database.connect();
+}
+connectDatabase();
+app.use((req, res, next) => connectDatabase());
 
 app.listen(port, () => {
     console.log('[info] Listening in port ' + port + '...');
