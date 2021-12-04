@@ -29,6 +29,11 @@ beforeEach(async () => {
     resetIndexer();
 });
 
+test('indexer exists in database', async () => {
+    const indexer = (await EntityIdIndexerModel.find({}).exec())[0];
+    expect(indexer).toBeTruthy();
+});
+
 afterAll(async () => {
     await database.close();
 });
