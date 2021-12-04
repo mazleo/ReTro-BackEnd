@@ -69,7 +69,9 @@ const entityIdIndexer = {
     setupEntityIdIndexer,
     getIndexer,
     getIndex,
-    incrementIndex
+    incrementIndex,
+    throwErrorIfNoIndexer,
+    checkIndexerExists
 }
 
 module.exports = entityIdIndexer;
