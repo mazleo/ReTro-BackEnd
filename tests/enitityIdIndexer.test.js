@@ -61,6 +61,22 @@ test('getIndex gets indexes', async () => {
     }
 });
 
+test('incrementIndex properly increments an index', async () => {
+    const maxNumOfRepetitions = 100;
+
+    for (var expectedKey of indexerExpectedKeys) {
+        var randomNumOfRepetitions = Math.floor(Math.random() * maxNumOfRepetitions);
+        var expectedValue = randomNumOfRepetitions;
+
+        for (var i = 0; i < randomNumOfRepetitions; i++) {
+            await EntityIdIndexer.incrementIndex(expectedKey);
+        }
+
+        var actualValue = await EntityIdIndexer.getIndex(expectedKey);
+        expect(actualValue).toEqual(expectedValue);
+    }
+}, timeout=30000);
+
 afterEach(async () => {
     await resetIndexer();
 });
