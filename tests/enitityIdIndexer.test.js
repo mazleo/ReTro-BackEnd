@@ -2,6 +2,17 @@
 const EntityIdIndexerModel = require('../model/EntityIdIndexer');
 const EntityIdIndexer = require('../services/entityIdIndexer');
 const database = require('../model/database')
+const indexerExpectedKeys = [
+    'userIdIndex',
+    'retroCalendarIdIndex',
+    'workspaceIdIndex',
+    'projectIdIndex',
+    'tagIdIndex',
+    'tagCompositionIdIndex',
+    'taskIdIndex',
+    'timesheetIdIndex',
+    'logIdIndex'
+];
 
 const resetIndexer = async () => {
     await EntityIdIndexerModel.remove({}).exec();
@@ -36,18 +47,6 @@ test('indexer exists in database', async () => {
 
 test('getIndexer retrieves indexer', async () => {
     const indexer = (await EntityIdIndexerModel.find({}).exec())[0];
-
-    const indexerExpectedKeys = [
-        'userIdIndex',
-        'retroCalendarIdIndex',
-        'workspaceIdIndex',
-        'projectIdIndex',
-        'tagIdIndex',
-        'tagCompositionIdIndex',
-        'taskIdIndex',
-        'timesheetIdIndex',
-        'logIdIndex'
-    ];
 
     for (var expectedIndexKey of indexerExpectedKeys) {
         var actualIndexValue = indexer[expectedIndexKey];
