@@ -14,14 +14,18 @@ const port = process.env.PORT || defaultPort;
 const morganFormat = config.get('morganFormat');
 app.use(morgan(morganFormat));
 
+app.get('/', (req, res, next) => {
+    res.status(200).send('hello world!');
+});
+
+EntityIdIndexer.setupEntityIdIndexer();
+app.use(EntityIdIndexer.setupEntityIdIndexer);
+
 const connectDatabase = () => {
     mongoose.connection.on('error', error => database.handlePeriConnectionError(error));
     database.connect();
 }
 connectDatabase();
-
-EntityIdIndexer.setupEntityIdIndexer();
-app.use(EntityIdIndexer.setupEntityIdIndexer);
 
 app.listen(port, () => {
     console.log('[info] Listening in port ' + port + '...');
