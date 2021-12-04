@@ -15,7 +15,7 @@ const indexerExpectedKeys = [
 ];
 
 const resetIndexer = async () => {
-    await EntityIdIndexerModel.remove({}).exec();
+    await EntityIdIndexerModel.deleteMany({}).exec();
 
     const indexer = {
         userIdIndex: 0,
@@ -52,6 +52,10 @@ test('getIndexer retrieves indexer', async () => {
         var actualIndexValue = indexer[expectedIndexKey];
         expect(actualIndexValue).toBeDefined();
     }
+});
+
+afterEach(async () => {
+    await resetIndexer();
 });
 
 afterAll(async () => {
