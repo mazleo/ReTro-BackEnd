@@ -11,15 +11,17 @@ const TimesheetSchema = new Schema({
             of: String
         },
         logs: {
-            type: Map,
-            of: new Schema({
-                task: String,
-                startTime: mongoose.Decimal128,
-                endTime: mongoose.Decimal128,
-                duration: mongoose.Decimal128,
-                notes: String,
-                googleId: String
-            }),
+            byId: {
+                type: Map,
+                of: new Schema({
+                    task: String,
+                    startTime: mongoose.Decimal128,
+                    endTime: mongoose.Decimal128,
+                    duration: mongoose.Decimal128,
+                    notes: String,
+                    googleId: String
+                }),
+            },
             index: {
                 byDays: {
                     type: Map,
