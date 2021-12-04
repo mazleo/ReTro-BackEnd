@@ -46,7 +46,7 @@ test('indexer exists in database', async () => {
 });
 
 test('getIndexer retrieves indexer', async () => {
-    const indexer = (await EntityIdIndexerModel.find({}).exec())[0];
+    const indexer = await EntityIdIndexer.getIndexer();
 
     for (var expectedIndexKey of indexerExpectedKeys) {
         var actualIndexValue = indexer[expectedIndexKey];
