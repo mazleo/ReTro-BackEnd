@@ -54,6 +54,13 @@ test('getIndexer retrieves indexer', async () => {
     }
 });
 
+test('getIndex gets indexes', async () => {
+    for (var expectedKey of indexerExpectedKeys) {
+        var index = await EntityIdIndexer.getIndex(expectedKey);
+        expect(index).toEqual(0);
+    }
+});
+
 afterEach(async () => {
     await resetIndexer();
 });
