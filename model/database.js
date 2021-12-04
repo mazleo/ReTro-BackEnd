@@ -20,5 +20,11 @@ const handlePeriConnectionError = (error) => {
     console.log(error);
 }
 
+const close = async () => {
+    console.log('[info] Closing connection to database...')
+    await mongoose.connection.close();
+}
+
 module.exports.connect = connect;
 module.exports.handlePeriConnectionError = handlePeriConnectionError;
+module.exports.close = close;
