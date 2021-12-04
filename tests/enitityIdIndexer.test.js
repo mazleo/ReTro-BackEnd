@@ -37,7 +37,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-    resetIndexer();
+    await resetIndexer();
 });
 
 test('indexer exists in database', async () => {
