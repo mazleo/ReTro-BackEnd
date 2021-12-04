@@ -34,6 +34,27 @@ test('indexer exists in database', async () => {
     expect(indexer).toBeTruthy();
 });
 
+test('getIndexer retrieves indexer', async () => {
+    const indexer = (await EntityIdIndexerModel.find({}).exec())[0];
+
+    const indexerExpectedKeys = [
+        'userIdIndex',
+        'retroCalendarIdIndex',
+        'workspaceIdIndex',
+        'projectIdIndex',
+        'tagIdIndex',
+        'tagCompositionIdIndex',
+        'taskIdIndex',
+        'timesheetIdIndex',
+        'logIdIndex'
+    ];
+
+    for (var expectedIndexKey of indexerExpectedKeys) {
+        var actualIndexValue = indexer[expectedIndexKey];
+        expect(actualIndexValue).toBeDefined();
+    }
+});
+
 afterAll(async () => {
     await database.close();
 });
