@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const config = require('config');
 const database = require('./model/database');
+const EntityIdIndexerModel = require('./model/EntityIdIndexer');
+const EntityIdIndexer = require('./services/entityIdIndexer')
 
 const defaultPort = config.get('port');
 const port = process.env.PORT || defaultPort;
@@ -18,6 +20,8 @@ const connectDatabase = () => {
 }
 connectDatabase();
 
+EntityIdIndexer.setupEntityIdIndexer();
+app.use(EntityIdIndexer.setupEntityIdIndexer);
 
 app.listen(port, () => {
     console.log('[info] Listening in port ' + port + '...');
