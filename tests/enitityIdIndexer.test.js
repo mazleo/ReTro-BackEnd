@@ -41,8 +41,8 @@ beforeEach(async () => {
 });
 
 test('indexer exists in database', async () => {
-    const indexer = (await EntityIdIndexerModel.find({}).exec())[0];
-    expect(indexer).toBeTruthy();
+    const isIndexerExists = await EntityIdIndexer.checkIndexerExists();
+    expect(isIndexerExists).toBeTruthy();
 });
 
 test('getIndexer retrieves indexer', async () => {
