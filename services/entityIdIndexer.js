@@ -11,56 +11,82 @@ const checkIndexerExists = () => {
 }
 
 const throwErrorIfNoIndexer = async (index=true) => {
-    const isIndexerExists = await checkIndexerExists();
-    if (!isIndexerExists || !index) {
-        throw '[error] No Entity ID Indexer exists.'
+    try {
+        const isIndexerExists = await checkIndexerExists();
+
+        if (!isIndexerExists || !index) {
+            throw '[error] No Entity ID Indexer exists.'
+        }
+    }
+    catch (error) {
+        console.error(error);
     }
 }
 
 const getIndexer = async () => {
     throwErrorIfNoIndexer();
 
-    return (await EntityIdIndexerModel.find({}).exec())[0];
+    try {
+        return (await EntityIdIndexerModel.find({}).exec())[0];
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 
 const getIndex = async (index) => {
     throwErrorIfNoIndexer(index);
 
-    const indexer = await getIndexer();
-    const indexValue = indexer[index];
+    try {
+        const indexer = await getIndexer();
+        const indexValue = indexer[index];
 
-    return indexValue;
+        return indexValue;
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 
 const incrementIndex = async (index) => {
     throwErrorIfNoIndexer(index);
 
-    const indexer = await getIndexer();
-    indexer[index]++;
+    try {
+        const indexer = await getIndexer();
+        indexer[index]++;
 
-    console.log('[info] Incrementing indexer ' + index + '...');
-    const indexerId = indexer['_id'];
-    await EntityIdIndexerModel.updateOne({_id: indexerId}, indexer).exec();
+        console.log('[info] Incrementing indexer ' + index + '...');
+        const indexerId = indexer['_id'];
+        await EntityIdIndexerModel.updateOne({_id: indexerId}, indexer).exec();
+    }
+    catch (error) {
+        console.log(error);
+    }
 }
 
 const setupEntityIdIndexer = async (req, res, next) => {
-    const isIndexerExists = await checkIndexerExists();
+    try {
+        const isIndexerExists = await checkIndexerExists();
 
-    if (!isIndexerExists) {
-        const indexer = {
-            userIdIndex: 0,
-            retroCalendarIdIndex: 0,
-            workspaceIdIndex: 0,
-            projectIdIndex: 0,
-            tagIdIndex: 0,
-            tagCompositionIdIndex: 0,
-            taskIdIndex: 0,
-            timesheetIdIndex: 0,
-            logIdIndex: 0
+        if (!isIndexerExists) {
+            const indexer = {
+                userIdIndex: 0,
+                retroCalendarIdIndex: 0,
+                workspaceIdIndex: 0,
+                projectIdIndex: 0,
+                tagIdIndex: 0,
+                tagCompositionIdIndex: 0,
+                taskIdIndex: 0,
+                timesheetIdIndex: 0,
+                logIdIndex: 0
+            }
+
+            console.log('[info] No Entity ID Indexer found. Creating one...')
+            await EntityIdIndexerModel.create(indexer);
         }
-
-        console.log('[info] No Entity ID Indexer found. Creating one...')
-        await EntityIdIndexerModel.create(indexer);
+    }
+    catch (error) {
+        console.log(error);
     }
 }
 

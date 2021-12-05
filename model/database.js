@@ -10,8 +10,8 @@ const connect = async () => {
         console.log('[info] Connected to database.')
     }
     catch (initialConnectionError) {
-        console.log('[error] Unable to initiate connection to database.');
-        console.log(initialConnectionError.message);
+        console.error('[error] Unable to initiate connection to database.');
+        console.error(initialConnectionError.message);
     }
 };
 
@@ -22,7 +22,12 @@ const handlePeriConnectionError = (error) => {
 
 const close = async () => {
     console.log('[info] Closing connection to database...')
-    await mongoose.connection.close();
+    try {
+        await mongoose.connection.close();
+    }
+    catch (error) {
+        console.error(error);
+    }
 }
 
 module.exports.connect = connect;

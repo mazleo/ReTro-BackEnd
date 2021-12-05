@@ -15,8 +15,13 @@ const morganFormat = config.get('morganFormat');
 app.use(morgan(morganFormat));
 
 app.get('/', async (req, res, next) => {
-    const indexer = await EntityIdIndexer.getIndexer();
-    res.status(200).json(indexer);
+    try {
+        const indexer = await EntityIdIndexer.getIndexer();
+        res.status(200).json(indexer);
+    }
+    catch (error) {
+        console.error(error);
+    }
 });
 
 EntityIdIndexer.setupEntityIdIndexer();
