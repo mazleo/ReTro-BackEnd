@@ -15,23 +15,15 @@ const morganFormat = config.get('morganFormat');
 app.use(morgan(morganFormat));
 
 app.get('/', async (req, res, next) => {
-    try {
-        const indexer = await EntityIdIndexer.getIndexer();
-        res.status(200).json(indexer);
-    }
-    catch (error) {
-        console.error(error);
-    }
+    res.status(200).send('Hello world!');
 });
-
-EntityIdIndexer.setupEntityIdIndexer();
-app.use(EntityIdIndexer.setupEntityIdIndexer);
 
 const connectDatabase = () => {
     mongoose.connection.on('error', error => database.handlePeriConnectionError(error));
     database.connect();
 }
 connectDatabase();
+EntityIdIndexer.setupEntityIdIndexer();
 
 app.listen(port, () => {
     console.log('[info] Listening in port ' + port + '...');
