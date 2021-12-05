@@ -2,7 +2,6 @@
     "environments": {
         "test": {
             "scripts": {
-                "test-setup": "npm ci",
                 "test": "jest --silent"
             }
         }
