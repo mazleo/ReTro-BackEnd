@@ -14,8 +14,9 @@ const port = process.env.PORT || defaultPort;
 const morganFormat = config.get('morganFormat');
 app.use(morgan(morganFormat));
 
-app.get('/', (req, res, next) => {
-    res.status(200).send('hello world!');
+app.get('/', async (req, res, next) => {
+    const indexer = await EntityIdIndexer.getIndexer();
+    res.status(200).json(indexer);
 });
 
 EntityIdIndexer.setupEntityIdIndexer();
