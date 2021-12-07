@@ -16,6 +16,7 @@ const getUserWithEmail = async email => {
     }
 }
 
+/* ~~~ POST '/' ~~~ */
 const userValidators = [
     body('email', 'Please enter a valid email.').isEmail(),
     body('password', 'Password must be at least 5 characters and less than 32 characters.').isLength({min: 5, max:32})
@@ -49,6 +50,19 @@ router.post('/', userValidators, async (req, res, next) => {
     catch (error) {
         console.error(error);
         res.status(500).json({error:{msg:'Unable to create new user.'}});
+    }
+});
+
+/* ~~~ GET '/' ~~~ */
+router.get('/', async (req, res, next) => {
+    try {
+        const criteria = req.body;
+        const targetUsers = await UserModel.find(criteria).exec();
+
+        res.status(200).json(targetUsers);
+    }
+    catch (error) {
+        console.error(error);
     }
 });
 
