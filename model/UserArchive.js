@@ -127,4 +127,7 @@ const UserSchema = new Schema({
 
 UserSchema.index({email: 1});
 
-module.exports = mongoose.model('User', UserSchema);
+const date = new Date();
+const month = date.getMonth() + 1;
+const year = date.getFullYear();
+module.exports = mongoose.model(`UserArchive-${month}${year}`, UserSchema);
