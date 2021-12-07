@@ -7,7 +7,6 @@ const UserSchema = new Schema({
     id: String,
     password: String,
     name: String,
-    email: String,
     retroCalendar: {
         id: String,
         googleId: String
