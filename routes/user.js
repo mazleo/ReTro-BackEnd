@@ -72,4 +72,40 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+const validateUserIdParam = (req, res, next) => {
+    const userId = req.params.userId;
+    if (!userId) {
+        console.error('[error] No id given for /user/:userId endpoint.')
+        res.status(400).json({error:{msg:'Please enter a valid user id for the /user/:userId endpoint.'}});
+        return;
+    }
+    if (Number.isNaN(Number(userId))) {
+        console.error('[error] Improper id entered in the /user/:userId endpoint.');
+        res.status(400).json({error:{msg:'Please enter a proper id in the /user/:userId endpoint. This must be a number.'}});
+        return;
+    }
+
+    next();
+};
+
+/* ~~~ GET '/:user' - Get specific user ~~~ */
+router.get('/:userId', validateUserIdParam, async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+
+        const returnFields = ['id', 'email', '-_id'];
+        const targetUser = await UserModel.findOne({id:userId}, returnFields);
+
+        if (!targetUser) {
+            res.status(404).json({});
+            return next();
+        }
+
+        res.status(200).json(targetUser);
+    }
+    catch (error) {
+        console.error(error);
+    }
+});
+
 module.exports = router;

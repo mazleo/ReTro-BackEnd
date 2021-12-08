@@ -173,6 +173,66 @@ test('GET /user', done => {
         .end(done);
 });
 
+describe('Get specific user', () => {
+    beforeAll(async () => {
+        try {
+            await resetIndexer();
+            await resetUserDatabase();
+        }
+        catch (error) {
+            console.error(error);
+        }
+    })
+    beforeEach(done => {
+        // Create sample first
+        request
+            .post('/user')
+            .send({email:'example@example.com',password:'password'})
+            .end(done);
+    });
+    test('GET /user/:userId', done => {
+        // Valid input; found resource
+        // Get sample
+        request
+            .get('/user/1')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(200)
+            .expect({email:'example@example.com',id:'1'})
+            .end(done);
+
+        // Valid input; resource not found
+        request
+            .get('/user/5839058')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(404)
+            .end(done);
+
+        // Invalid input; not a number
+        request
+            .get('/user/lsdfalsfjlaskdfjlksjdf')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(400)
+            .end(done);
+        // Invalid input; with special characters
+        request
+            .get('/user/df!@#*fjakl(#jfKI(#.')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(400)
+            .end(done);
+        // Invalid input; numbers with letters
+        request
+            .get('/user/358j39589')
+            .set('Accept', 'application/json')
+            .expect('Content-Type', 'application/json; charset=utf-8')
+            .expect(400)
+            .end(done);
+    });
+});
+
 afterAll(async () => {
     try {
         await resetUserDatabase();
