@@ -17,7 +17,7 @@ const getUserWithEmail = async email => {
     }
 }
 
-/* ~~~ POST '/' ~~~ */
+/* ~~~ POST '/' - Create a user ~~~ */
 const userValidators = [
     body('email', 'Please enter a valid email.').isEmail(),
     body('password', 'Password must be at least 5 characters and less than 32 characters.').isLength({min: 5, max:32})
@@ -58,7 +58,7 @@ router.post('/', userValidators, async (req, res, next) => {
     }
 });
 
-/* ~~~ GET '/' ~~~ */
+/* ~~~ GET '/' - Get users with criteria ~~~ */
 router.get('/', async (req, res, next) => {
     try {
         const criteria = req.body;
