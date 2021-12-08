@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app",
     "server": "nodemon app",
-    "test": "jest --silent"
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",
