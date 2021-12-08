@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const UserModel = require('../model/User');
+const EntityIdIndexer = require('../services/entityIdIndexer');
 const {body, validationResult} = require('express-validator');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -38,14 +39,18 @@ router.post('/', userValidators, async (req, res, next) => {
             return next();
         }
 
+        const indexKey = 'userIdIndex';
+        await EntityIdIndexer.incrementIndex(indexKey);
+        const newId = Number(await EntityIdIndexer.getIndex(indexKey));
         const passwordHash = await bcrypt.hash(newPassword, saltRounds);
         const newUser = {
+            id: newId,
             email: newEmail,
             password: passwordHash
         };
 
         await UserModel.create(newUser);
-        res.status(200).json({email: newEmail});
+        res.status(200).json({id:newId,email:newEmail});
     }
     catch (error) {
         console.error(error);

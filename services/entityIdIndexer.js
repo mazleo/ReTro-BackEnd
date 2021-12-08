@@ -39,7 +39,7 @@ const getIndex = async (index) => {
 
     try {
         const indexer = await getIndexer();
-        const indexValue = indexer[index];
+        const indexValue = Number(indexer[index]);
 
         return indexValue;
     }
@@ -52,10 +52,11 @@ const incrementIndex = async (index) => {
     throwErrorIfNoIndexer(index);
 
     try {
-        const indexer = await getIndexer();
-        indexer[index]++;
+        let indexer = await getIndexer();
+        let currentIndexValue = Number(indexer[index]);
+        currentIndexValue++;
+        indexer[index] = currentIndexValue;
 
-        console.log('[info] Incrementing indexer ' + index + '...');
         const indexerId = indexer['_id'];
         await EntityIdIndexerModel.updateOne({_id: indexerId}, indexer).exec();
     }
