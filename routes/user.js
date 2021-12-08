@@ -62,7 +62,8 @@ router.post('/', userValidators, async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         const criteria = req.body;
-        const targetUsers = await UserModel.find(criteria).exec();
+        const returnFields = ['id', 'email', '-_id'];
+        const targetUsers = await UserModel.find(criteria, returnFields).exec();
 
         res.status(200).json(targetUsers);
     }
