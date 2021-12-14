@@ -59,7 +59,7 @@ test('POST /user valid input', done => {
             .send({email:'email1@example.com', password:'password'})
             .set('Accept', 'application/json')
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200)
+            .expect(201)
             .end(done);
     }
     catch (error) {
@@ -134,7 +134,7 @@ test('POST /user with valid input; password with special characters', done => {
             .send({email:'user3@example.com', password:'!@#$%^&*() {}=-<>/?:;123'})
             .set('Accept', 'application/json')
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200)
+            .expect(201)
             .end(done);
     }
     catch (error) {
@@ -149,7 +149,7 @@ test('POST /user with valid inputs; email with dot', done => {
             .send({email:'user.4@example.com', password:'password'})
             .set('Accept', 'application/json')
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(200)
+            .expect(201)
             .end(done);
     }
     catch (error) {
