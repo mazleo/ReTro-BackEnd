@@ -50,7 +50,7 @@ router.post('/', userValidators, async (req, res, next) => {
         };
 
         await UserModel.create(newUser);
-        res.status(200).json({id:newId,email:newEmail});
+        res.status(201).json({id:newId,email:newEmail});
     }
     catch (error) {
         console.error(error);
