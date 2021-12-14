@@ -3,7 +3,7 @@ const router = express.Router();
 
 const UserModel = require('../model/User');
 const EntityIdIndexer = require('../services/entityIdIndexer');
-const {body, validationResult} = require('express-validator');
+const {body, param, validationResult} = require('express-validator');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -72,18 +72,36 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-const validateUserIdParam = (req, res, next) => {
-    const userId = req.params.userId;
-    if (!userId) {
-        console.error('[error] No id given for /user/:userId endpoint.')
-        res.status(400).json({error:{msg:'Please enter a valid user id for the /user/:userId endpoint.'}});
-        return;
+const userIdValidators = [
+    param('userId', 'Please enter a user ID in the path.').exists(checkNull=true),
+    param('userId', 'The user ID must be a number').custom(value => !Number.isNaN(Number(value)))
+];
+
+/* ~~~ GET '/:userId' - Get specific user ~~~ */
+router.get('/:userId', userIdValidators, async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json(errors.array());
+        return next();
     }
-    if (Number.isNaN(Number(userId))) {
-        console.error('[error] Improper id entered in the /user/:userId endpoint.');
-        res.status(400).json({error:{msg:'Please enter a proper id in the /user/:userId endpoint. This must be a number.'}});
-        return;
+
+    try {
+        const userId = req.params.userId;
+
+        const returnFields = ['id', 'email', '-_id'];
+        const targetUser = await UserModel.findOne({id:userId}, returnFields);
+
+        if (!targetUser) {
+            res.status(404).json({});
+            return next();
+        }
+
+        res.status(200).json(targetUser);
     }
+    catch (error) {
+        console.error(error);
+    }
+});
 
     next();
 };
