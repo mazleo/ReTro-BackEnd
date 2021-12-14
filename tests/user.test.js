@@ -233,6 +233,97 @@ describe('Get specific user', () => {
     });
 });
 
+describe('Update a user', () => {
+    beforeAll(async () => {
+        try {
+            await resetIndexer();
+            await resetUserDatabase();
+        }
+        catch (error) {
+            console.error(error);
+        }
+    });
+
+    beforeEach(done => {
+        request
+            .post('/user')
+            .send({email:'email@email.com',password:'password'})
+            .end(done);
+    });
+
+    test('PUT /user/:userId - valid email', done => {
+        request
+            .put('/user/1')
+            .send({email:'iamvalid@email.com'})
+            .expect(200)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - valid password', done => {
+        request
+            .put('/user/1')
+            .send({password:'iampassowrd'})
+            .expect(200)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - valid password and email', done => {
+        request
+            .put('/user/1')
+            .send({email:'iamgoodone@email.com',password:'iampassowrd'})
+            .expect(200)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - invalid id', done => {
+        request
+            .put('/user/1a')
+            .send({email:'iamgoodone@email.com',password:'iampassowrd'})
+            .expect(400)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - invalid email', done => {
+        request
+            .put('/user/1')
+            .send({email:'iamgoodone@com'})
+            .expect(400)
+            .end(done);
+    });
+    
+    test('PUT /user/:userId - invalid password', done => {
+        request
+            .put('/user/1')
+            .send({password:'fk'})
+            .expect(400)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - invalid password and email', done => {
+        request
+            .put('/user/1')
+            .send({email:'iamgoodone',password:'fkd'})
+            .expect(400)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - valid email, invalid password', done => {
+        request
+            .put('/user/1')
+            .send({email:'iamgoodone@email.com',password:'fkd'})
+            .expect(400)
+            .end(done);
+    });
+
+    test('PUT /user/:userId - invalid email, valid password', done => {
+        request
+            .put('/user/1')
+            .send({email:'iamgoodone',password:'password'})
+            .expect(400)
+            .end(done);
+    });
+});
+
 afterAll(async () => {
     try {
         await resetUserDatabase();

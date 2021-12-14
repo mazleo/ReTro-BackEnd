@@ -103,19 +103,37 @@ router.get('/:userId', userIdValidators, async (req, res, next) => {
     }
 });
 
-    next();
-};
+const updateUserValidators = [
+    body('email', 'Please enter a valid email.').isEmail().optional(),
+    body('password', 'Password must be at least 5 characters and less than 32 characters.').isLength({min: 5, max:32}).optional()
+];
 
-/* ~~~ GET '/:user' - Get specific user ~~~ */
-router.get('/:userId', validateUserIdParam, async (req, res, next) => {
+/* ~~~ PUT '/:userId' - Update specific user ~~~ */
+router.put('/:userId', userIdValidators, updateUserValidators, async (req, res, next) => {
+    const error = await validationResult(req);
+    if (!error.isEmpty()) {
+        res.status(400).json(error.array());
+        return next();
+    }
+
     try {
         const userId = req.params.userId;
+        const update = req.body;
+
+        const plainPassword = update.password;
+        if (plainPassword) {
+            const encryptedPassword = await bcrypt.hash(plainPassword, saltRounds);
+            update.password = encryptedPassword;
+        }
 
         const returnFields = ['id', 'email', '-_id'];
-        const targetUser = await UserModel.findOne({id:userId}, returnFields);
+        
+        await UserModel.updateOne({id:userId}, update);
+
+        let targetUser = await UserModel.findOne({id:userId}, returnFields).exec();
 
         if (!targetUser) {
-            res.status(404).json({});
+            res.status(404).json({error:{msg:`User with ID ${userId} not found.`}});
             return next();
         }
 
