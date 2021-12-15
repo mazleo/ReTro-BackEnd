@@ -76,15 +76,18 @@ const userIdValidators = [
     param('userId', 'Please enter a user ID in the path.').exists(checkNull=true),
     param('userId', 'The user ID must be a number').custom(value => !Number.isNaN(Number(value)))
 ];
-
-/* ~~~ GET '/:userId' - Get specific user ~~~ */
-router.get('/:userId', userIdValidators, async (req, res, next) => {
+router.use('/:userId', userIdValidators, (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         res.status(400).json({error:errors.array()});
-        return next();
+        return;
     }
+    
+    return next();
+});
 
+/* ~~~ GET '/:userId' - Get specific user ~~~ */
+router.get('/:userId', userIdValidators, async (req, res, next) => {
     try {
         const userId = req.params.userId;
 
@@ -109,11 +112,11 @@ const updateUserValidators = [
 ];
 
 /* ~~~ PUT '/:userId' - Update specific user ~~~ */
-router.put('/:userId', userIdValidators, updateUserValidators, async (req, res, next) => {
-    const error = await validationResult(req);
-    if (!error.isEmpty()) {
-        res.status(400).json({error:error.array()});
-        return next();
+router.put('/:userId', updateUserValidators, async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json({error:errors.array()});
+        return;
     }
 
     try {
@@ -145,24 +148,23 @@ router.put('/:userId', userIdValidators, updateUserValidators, async (req, res, 
 });
 
 /* ~~~ DELETE /:userId - delete specific user ~~~ */
-router.delete('/:userId', userIdValidators, async (req, res, next) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        res.status(400).json({error:errors.array()});
-        return next();
+router.delete('/:userId', async (req, res, next) => {
+    try {
+        const targetId = req.params.userId;
+
+        const returnFields = {id: 1, email: 1, _id: 0};
+        const targetUser = await UserModel.findOneAndDelete({id:targetId}, {projection:returnFields}).exec();
+
+        if (!targetUser) {
+            res.status(404).json({error:[{msg:`User with ID ${targetId} not found.`}]});
+            return next();
+        }
+
+        res.status(200).json(targetUser);
     }
-
-    const targetId = req.params.userId;
-
-    const returnFields = ['email'];
-    const targetUser = await UserModel.findOneAndDelete({id:targetId}, {projection:returnFields}).exec();
-
-    if (!targetUser) {
-        res.status(404).json({error:[{msg:`User with ID ${targetId} not found.`}]});
-        return next();
+    catch (error) {
+        console.error(error);
     }
-
-    res.status(200).json(targetUser);
 });
 
 module.exports = router;
