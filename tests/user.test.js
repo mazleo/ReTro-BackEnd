@@ -324,6 +324,64 @@ describe('Update a user', () => {
     });
 });
 
+describe('DELETE /user/:userId', () => {
+    let deleteTestCounter = 0;
+
+    beforeAll(async () => {
+        try {
+            await resetUserDatabase();
+            await resetIndexer();
+        }
+        catch (error) {
+            console.error(error);
+        }
+    });
+
+    beforeEach(done => {
+        request
+            .post('/user')
+            .send({email:`email.${deleteTestCounter}@email.com`,password:'password'})
+            .end(done);
+
+        deleteTestCounter++;
+    })
+
+    test('Valid, existing ID', done => {
+        request
+            .delete('/user/1')
+            .expect(200)
+            .end(done);
+    });
+
+    test('Invalid ID', done => {
+        request
+            .delete('/user/i1am2an3invalid4id')
+            .expect(400)
+            .end(done);
+    });
+
+    test('Nonexistent ID', done => {
+        request
+            .delete('/user/999')
+            .expect(404)
+            .end(done);
+    });
+
+    test('Valid, existing ID', done => {
+        request
+            .delete('/user/2')
+            .expect(200)
+            .end(done);
+    });
+
+    test('Valid, existing ID', done => {
+        request
+            .delete('/user/3')
+            .expect(200)
+            .end(done);
+    });
+});
+
 afterAll(async () => {
     try {
         await resetUserDatabase();

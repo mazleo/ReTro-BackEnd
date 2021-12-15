@@ -144,4 +144,25 @@ router.put('/:userId', userIdValidators, updateUserValidators, async (req, res, 
     }
 });
 
+/* ~~~ DELETE /:userId - delete specific user ~~~ */
+router.delete('/:userId', userIdValidators, async (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        res.status(400).json({error:errors.array()});
+        return next();
+    }
+
+    const targetId = req.params.userId;
+
+    const returnFields = ['email'];
+    const targetUser = await UserModel.findOneAndDelete({id:targetId}, {projection:returnFields}).exec();
+
+    if (!targetUser) {
+        res.status(404).json({error:[{msg:`User with ID ${targetId} not found.`}]});
+        return next();
+    }
+
+    res.status(200).json(targetUser);
+});
+
 module.exports = router;
