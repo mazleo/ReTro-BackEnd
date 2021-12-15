@@ -7,6 +7,12 @@ const {body, param, validationResult} = require('express-validator');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const excludedFields = {
+    password: 0,
+    _id: 0,
+    __v: 0
+}
+
 const getUserWithEmail = async email => {
     try {
         const targetUser = await UserModel.findOne({email}).exec();
@@ -62,8 +68,7 @@ router.post('/', userValidators, async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         const criteria = req.body;
-        const returnFields = ['id', 'email', '-_id'];
-        const targetUsers = await UserModel.find(criteria, returnFields).exec();
+        const targetUsers = await UserModel.find(criteria, excludedFields).exec();
 
         res.status(200).json(targetUsers);
     }
@@ -91,8 +96,7 @@ router.get('/:userId', userIdValidators, async (req, res, next) => {
     try {
         const userId = req.params.userId;
 
-        const returnFields = ['id', 'email', '-_id'];
-        const targetUser = await UserModel.findOne({id:userId}, returnFields);
+        const targetUser = await UserModel.findOne({id:userId}, excludedFields);
 
         if (!targetUser) {
             res.status(404).json({});
@@ -129,11 +133,9 @@ router.put('/:userId', updateUserValidators, async (req, res, next) => {
             update.password = encryptedPassword;
         }
 
-        const returnFields = ['id', 'email', '-_id'];
-        
         await UserModel.updateOne({id:userId}, update);
 
-        let targetUser = await UserModel.findOne({id:userId}, returnFields).exec();
+        let targetUser = await UserModel.findOne({id:userId}, excludedFields).exec();
 
         if (!targetUser) {
             res.status(404).json({error:[{msg:`User with ID ${userId} not found.`}]});
@@ -152,8 +154,7 @@ router.delete('/:userId', async (req, res, next) => {
     try {
         const targetId = req.params.userId;
 
-        const returnFields = {id: 1, email: 1, _id: 0};
-        const targetUser = await UserModel.findOneAndDelete({id:targetId}, {projection:returnFields}).exec();
+        const targetUser = await UserModel.findOneAndDelete({id:targetId}, {projection:excludedFields}).exec();
 
         if (!targetUser) {
             res.status(404).json({error:[{msg:`User with ID ${targetId} not found.`}]});
