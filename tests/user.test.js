@@ -74,7 +74,7 @@ test('POST /user with conflict input', done => {
             .send({email:'email1@example.com', password:'password'})
             .set('Accept', 'application/json')
             .expect('Content-Type', 'application/json; charset=utf-8')
-            .expect(409, {error:{msg:"A user with the email email1@example.com already exists."}})
+            .expect(409, {error:[{msg:"A user with the email email1@example.com already exists."}]})
             .end(done);
     }
     catch (error) {
