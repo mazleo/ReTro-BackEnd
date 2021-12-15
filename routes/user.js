@@ -35,7 +35,7 @@ router.post('/', userValidators, async (req, res, next) => {
 
         const isUserExist = await getUserWithEmail(newEmail);
         if (isUserExist) {
-            res.status(409).json({error:{msg:`A user with the email ${newEmail} already exists.`}})
+            res.status(409).json({error:[{msg:`A user with the email ${newEmail} already exists.`}]})
             return next();
         }
 
@@ -54,7 +54,7 @@ router.post('/', userValidators, async (req, res, next) => {
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({error:{msg:'Unable to create new user.'}});
+        res.status(500).json({error:[{msg:'Unable to create new user.'}]});
     }
 });
 
@@ -81,7 +81,7 @@ const userIdValidators = [
 router.get('/:userId', userIdValidators, async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        res.status(400).json(errors.array());
+        res.status(400).json({error:errors.array()});
         return next();
     }
 
@@ -112,7 +112,7 @@ const updateUserValidators = [
 router.put('/:userId', userIdValidators, updateUserValidators, async (req, res, next) => {
     const error = await validationResult(req);
     if (!error.isEmpty()) {
-        res.status(400).json(error.array());
+        res.status(400).json({error:error.array()});
         return next();
     }
 
@@ -133,7 +133,7 @@ router.put('/:userId', userIdValidators, updateUserValidators, async (req, res, 
         let targetUser = await UserModel.findOne({id:userId}, returnFields).exec();
 
         if (!targetUser) {
-            res.status(404).json({error:{msg:`User with ID ${userId} not found.`}});
+            res.status(404).json({error:[{msg:`User with ID ${userId} not found.`}]});
             return next();
         }
 
