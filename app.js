@@ -17,7 +17,7 @@ app.use(morgan(morganFormat));
 app.use(express.json());
 app.use((req, res, next) => {
     req.accepts('application/json');
-    res.setHeader('Content-Type', 'application/json');
+    res.type('application/json');
     next();
 });
 
