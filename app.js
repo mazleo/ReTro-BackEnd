@@ -14,9 +14,19 @@ const port = process.env.PORT || defaultPort;
 const morganFormat = config.get('morganFormat');
 app.use(morgan(morganFormat));
 
+app.use(express.json());
+app.use((req, res, next) => {
+    req.accepts('application/json');
+    res.setHeader('Content-Type', 'application/json');
+    next();
+});
+
 app.get('/', async (req, res, next) => {
     res.status(200).send('Hello world!');
 });
+
+const userRouter = require('./routes/user');
+app.use('/user', userRouter);
 
 const connectDatabase = () => {
     mongoose.connection.on('error', error => database.handlePeriConnectionError(error));

@@ -97,20 +97,19 @@ test('incrementIndex properly increments an index', async () => {
 
         for (var expectedKey of indexerExpectedKeys) {
             var randomNumOfRepetitions = Math.floor(Math.random() * maxNumOfRepetitions);
-            var expectedValue = randomNumOfRepetitions;
 
             for (var i = 0; i < randomNumOfRepetitions; i++) {
                 await EntityIdIndexer.incrementIndex(expectedKey);
+                var actualValue = await EntityIdIndexer.getIndex(expectedKey);
+                var expectedValue = i + 1;
+                expect(actualValue).toEqual(expectedValue);
             }
-
-            var actualValue = await EntityIdIndexer.getIndex(expectedKey);
-            expect(actualValue).toEqual(expectedValue);
         }
     }
     catch (error) {
         console.error(error);
     }
-}, timeout=30000);
+}, timeout=60000);
 
 afterEach(async () => {
     try {
