@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node app",
-    "server": "nodemon app"
+    "server": "nodemon app",
+    "test": "jest --runInBand"
   },
   "repository": {
     "type": "git",
@@ -30,7 +31,13 @@
     "config": "^3.3.6",
     "express": "^4.17.1",
     "express-jwt": "^6.1.0",
+    "express-validator": "^6.13.0",
     "mongoose": "^6.0.14",
-    "nodemon": "^2.0.15"
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "jest": "^27.4.3",
+    "nodemon": "^2.0.15",
+    "supertest": "^6.1.6"
   }
 }
