@@ -28,6 +28,9 @@ app.get('/', async (req, res, next) => {
 const userRouter = require('./routes/user');
 app.use('/user', userRouter);
 
+const authRouter = require('./routes/auth');
+app.use('/auth', authRouter);
+
 const connectDatabase = () => {
     mongoose.connection.on('error', error => database.handlePeriConnectionError(error));
     database.connect();
