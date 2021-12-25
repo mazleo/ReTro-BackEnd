@@ -11,6 +11,14 @@ const loginError = {
     ]
 };
 
+const validationError = {
+    error: [
+        {
+            msg: 'Unauthorized.'
+        }
+    ]
+}
+
 const generateToken = async (req, res, next) => {
     try {
         const emailInput = req.body.email;
@@ -30,7 +38,7 @@ const generateToken = async (req, res, next) => {
         }
 
         const token = await jwt.sign(
-            {emailInput},
+            {email:emailInput},
             config.get('secret'),
             {expiresIn: config.get('expire')}
         );
@@ -42,5 +50,31 @@ const generateToken = async (req, res, next) => {
     }
 };
 
+const validateToken = async (req, res, next) => {
+    const authHeader = req.get('Authorization');
+    if (!authHeader) {
+        res.status(401).json(validationError);
+        return;
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    try {
+        const email = await jwt.verify(token, config.get('secret')).email;
+
+        const targetUser = await UserModel.findOne({email}).exec();
+        if (!targetUser) {
+            res.status(401).json(validationError);
+            return;
+        }
+
+        return next();
+    }
+    catch (tokenError) {
+        res.status(401).json(validationError);
+        return;
+    }
+};
+
 module.exports.generateToken = generateToken;
-// module.exports.validateToken = 
+module.exports.validateToken = validateToken;
