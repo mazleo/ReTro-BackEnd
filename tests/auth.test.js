@@ -58,7 +58,7 @@ test('POST /auth - Generate token with valid cred', done => {
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(200)
         .end(done);
-});
+}, timeout=(20 * 1000));
 
 test('POST /auth - Generate token with nonexistent email', done => {
     request
@@ -68,7 +68,7 @@ test('POST /auth - Generate token with nonexistent email', done => {
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(401)
         .end(done);
-});
+}, timeout=(20 * 1000));
 
 test('POST /auth - Generate token with wrong password', done => {
     request
@@ -78,7 +78,7 @@ test('POST /auth - Generate token with wrong password', done => {
         .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(401)
         .end(done);
-});
+}, timeout=(20 * 1000));
 
 afterAll(async () => {
     try {
