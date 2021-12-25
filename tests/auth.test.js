@@ -43,39 +43,42 @@ beforeAll(async () => {
     }
 });
 
-beforeEach(done => {
-    request
-        .post('/user')
-        .send({email:'iamanemail@example.com',password:'I am a Password.'})
-        .end(done);
+describe('Generate auth token', () => {
+    beforeAll(done => {
+        request
+            .post('/user')
+            .send({email:'iamanemail@example.com',password:'I am a Password.'})
+            .end(done);
+    });
+
+    test('POST /auth - Generate token with valid cred', done => {
+        request
+            .post('/auth')
+            .send({email:'iamanemail@example.com',password:'I am a Password.'})
+            .set('Accept', 'application/json')
+            .expect(200)
+            .end(done);
+    }, timeout=(60 * 1000));
+
+    test('POST /auth - Generate token with nonexistent email', done => {
+        request
+            .post('/auth')
+            .send({email:'nonexistentemail@example.com',password:'asldkfj'})
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end(done);
+    }, timeout=(60 * 1000));
+
+    test('POST /auth - Generate token with wrong password', done => {
+        request
+            .post('/auth')
+            .send({email:'iamanemail@example.com',password:'I am wrong password'})
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end(done);
+    }, timeout=(60 * 1000));
 });
 
-test('POST /auth - Generate token with valid cred', done => {
-    request
-        .post('/auth')
-        .send({email:'iamanemail@example.com',password:'I am a Password.'})
-        .set('Accept', 'application/json')
-        .expect(200)
-        .end(done);
-}, timeout=(60 * 1000));
-
-test('POST /auth - Generate token with nonexistent email', done => {
-    request
-        .post('/auth')
-        .send({email:'nonexistentemail@example.com',password:'asldkfj'})
-        .set('Accept', 'application/json')
-        .expect(401)
-        .end(done);
-}, timeout=(60 * 1000));
-
-test('POST /auth - Generate token with wrong password', done => {
-    request
-        .post('/auth')
-        .send({email:'iamanemail@example.com',password:'I am wrong password'})
-        .set('Accept', 'application/json')
-        .expect(401)
-        .end(done);
-}, timeout=(60 * 1000));
 
 afterAll(async () => {
     try {
