@@ -18,7 +18,7 @@ app.use(express.json());
 app.use((req, res, next) => {
     req.accepts('application/json');
     res.type('application/json');
-    next();
+    return next();
 });
 
 app.get('/', async (req, res, next) => {
