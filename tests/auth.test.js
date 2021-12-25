@@ -55,7 +55,6 @@ test('POST /auth - Generate token with valid cred', done => {
         .post('/auth')
         .send({email:'iamanemail@example.com',password:'I am a Password.'})
         .set('Accept', 'application/json')
-        .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(200)
         .end(done);
 }, timeout=(60 * 1000));
@@ -65,7 +64,6 @@ test('POST /auth - Generate token with nonexistent email', done => {
         .post('/auth')
         .send({email:'nonexistentemail@example.com',password:'asldkfj'})
         .set('Accept', 'application/json')
-        .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(401)
         .end(done);
 }, timeout=(60 * 1000));
@@ -75,7 +73,6 @@ test('POST /auth - Generate token with wrong password', done => {
         .post('/auth')
         .send({email:'iamanemail@example.com',password:'I am wrong password'})
         .set('Accept', 'application/json')
-        .expect('Content-Type', 'application/json; charset=utf-8')
         .expect(401)
         .end(done);
 }, timeout=(60 * 1000));
