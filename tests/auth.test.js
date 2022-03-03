@@ -58,7 +58,7 @@ describe('Generate auth token', () => {
             .set('Accept', 'application/json')
             .expect(200)
             .end(done);
-    }, timeout=(60 * 1000));
+    }, 60000);
 
     test('POST /auth - Generate token with nonexistent email', done => {
         request
@@ -67,7 +67,7 @@ describe('Generate auth token', () => {
             .set('Accept', 'application/json')
             .expect(401)
             .end(done);
-    }, timeout=(60 * 1000));
+    }, 60000);
 
     test('POST /auth - Generate token with wrong password', done => {
         request
@@ -76,7 +76,7 @@ describe('Generate auth token', () => {
             .set('Accept', 'application/json')
             .expect(401)
             .end(done);
-    }, timeout=(60 * 1000));
+    }, 60000);
 });
 
 
