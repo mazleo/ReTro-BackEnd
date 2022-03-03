@@ -44,6 +44,7 @@ const generateToken = async (req, res, next) => {
         );
 
         res.status(200).json({token: token});
+        return;
     }
     catch (error) {
         console.error(error);
