@@ -39,7 +39,7 @@ const generateToken = async (req, res, next) => {
 
         const token = await jwt.sign(
             {email:emailInput},
-            config.get('secret'),
+            config.get('jwts'),
             {expiresIn: config.get('expire')}
         );
 
@@ -61,7 +61,7 @@ const validateToken = async (req, res, next) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const email = await jwt.verify(token, config.get('secret')).email;
+        const email = await jwt.verify(token, config.get('jwts')).email;
 
         const targetUser = await UserModel.findOne({email}).exec();
         if (!targetUser) {
