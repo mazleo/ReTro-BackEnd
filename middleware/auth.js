@@ -52,13 +52,11 @@ const generateToken = async (req, res, next) => {
 };
 
 const validateToken = async (req, res, next) => {
-    const authHeader = req.get('Authorization');
-    if (!authHeader) {
+    const token = req.get('Authorization');
+    if (!token) {
         res.status(401).json(validationError);
         return;
     }
-
-    const token = authHeader.split(' ')[1];
 
     try {
         const email = await jwt.verify(token, config.get('jwts')).email;
@@ -67,6 +65,9 @@ const validateToken = async (req, res, next) => {
         if (!targetUser) {
             res.status(401).json(validationError);
             return;
+        }
+        else {
+            req.email = email;
         }
 
         return next();
