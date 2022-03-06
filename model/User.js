@@ -15,6 +15,7 @@ const UserSchema = new Schema({
         type: Map,
         of: new Schema ({
             color: Number,
+            name: String,
             projects: {
                 type: Map,
                 of: new Schema({
