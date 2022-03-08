@@ -7,6 +7,7 @@ const config = require('config');
 const database = require('./model/database');
 const EntityIdIndexerModel = require('./model/EntityIdIndexer');
 const EntityIdIndexer = require('./services/entityIdIndexer')
+const { validateToken } = require('./middleware/auth');
 
 const defaultPort = config.get('port');
 const port = process.env.PORT || defaultPort;
@@ -30,6 +31,9 @@ app.use('/user', userRouter);
 
 const authRouter = require('./routes/auth');
 app.use('/auth', authRouter);
+
+const workspaceRouter = require('./routes/workspace');
+app.use('/workspace', validateToken, workspaceRouter);
 
 const connectDatabase = () => {
     mongoose.connection.on('error', error => database.handlePeriConnectionError(error));
