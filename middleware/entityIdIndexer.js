@@ -5,4 +5,13 @@ const getEntityIdIndexer = async () => {
     return (await EntityIdIndexerModel.findOne({}).exec());
 };
 
-module.exports = getEntityIdIndexer;
+const incrementEntityIdIndexer = async (indexerName) => {
+    const entityIdIndexer = await getEntityIdIndexer();
+
+    entityIdIndexer[indexerName]++;
+
+    await EntityIdIndexerModel.updateOne({}, entityIdIndexer).exec();
+};
+
+module.exports.getEntityIdIndexer = getEntityIdIndexer;
+module.exports.incrementEntityIdIndexer = incrementEntityIdIndexer;
