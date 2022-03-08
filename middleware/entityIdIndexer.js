@@ -2,7 +2,7 @@
 const EntityIdIndexerModel = require('../model/EntityIdIndexer');
 
 const getEntityIdIndexer = async () => {
-    return (await EntityIdIndexerModel.find({}).exec())[0];
+    return (await EntityIdIndexerModel.findOne({}).exec());
 };
 
 module.exports = getEntityIdIndexer;
