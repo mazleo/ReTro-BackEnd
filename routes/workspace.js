@@ -16,13 +16,29 @@ router.post('/', async (req, res, next) => {
         const user = await UserModel.findOne({email: req.email}, excludedFields).exec();
         const entityIdIndexer = await getEntityIdIndexer();
 
+        if (!entityIdIndexer) {
+            res.status(500).json({error:[{msg:"Server unable to process request."}]});
+            return;
+        }
+        if (typeof req.body.name != "string" && !(req.body.name instanceof String)) {
+            res.status(400).json({error:[{msg:"The workspace name must be a string."}]});
+            return;
+        }
+        else if (req.body.name.length < 1) {
+            res.status(400).json({error:[{msg:"The workspace name must be at least 1 character."}]});
+            return;
+        }
+
         let workspaces = user.get('workspaces');
         if (!workspaces) {
             workspaces = new Map();
         }
 
         const newWorkspaceId = entityIdIndexer.get('workspaceIdIndex');
-
+        if (!Number.isInteger(newWorkspaceId) || (Number.isInteger(newWorkspaceId) && newWorkspaceId < 0)) {
+            res.status(500).json({error:[{msg:"Server unable to process request."}]});
+            return;
+        }
         const newWorkspaceColor = colorsTools.getRandomColorId();
         const newWorkspaceName = req.body.name;
 
