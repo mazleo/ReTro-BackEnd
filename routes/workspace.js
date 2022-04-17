@@ -144,6 +144,31 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+/**
+ * GET /:workspaceId
+ * @description Get a specific workspace with an ID
+ */
+router.get('/:workspaceId', (req, res, next) => {
+    try {
+        const email = req.email;
+        const user = req.user;
+        const targetWorkspaceId = req.params.workspaceId;
+
+        let targetWorkspace = user.workspaces[targetWorkspaceId];
+
+        if (targetWorkspace == null) res.status(200).json({});
+        else {
+            res.status(200).json(targetWorkspace);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        respondWithServerError(res);
+        return;
+    }
+});
+
+
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTES END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 module.exports = router;
