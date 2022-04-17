@@ -97,6 +97,39 @@ describe('Test Workspace POST /', () => {
     }, testTimeout)
 });
 
+describe('GET / - Get all workspaces', () => {
+    beforeAll(done => {
+        request
+            .post('/auth')
+            .send({email: `${EMAIL}`, password: `${PASSWORD}`})
+            .set('Accept', 'application/json')
+            .expect(200)
+            .then(res => {
+                responseToken = res.body.token;
+                done();
+            })
+            .catch(err => done(err));
+    }, testTimeout);
+
+    test('GET / - Get all workspaces with valid token.', done => {
+        request
+            .get('/workspace')
+            .set('Authorization', responseToken)
+            .set('Accept', 'application/json')
+            .expect(200)
+            .end(done);
+    });
+
+    test('GET / - Get all workspaces with invalid token.', done => {
+        request
+            .get('/workspace')
+            .set('Authorization', 'i am invalid token')
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end(done);
+    });
+});
+
 afterAll(async () => {
     await testUtility.resetUserDatabase();
     await testUtility.resetIndexer();
