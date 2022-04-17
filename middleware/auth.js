@@ -19,6 +19,16 @@ const validationError = {
     ]
 }
 
+const excludedFields = {
+    password: 0,
+    _id: 0,
+    __v: 0
+}
+
+const getUserWithEmail = async (email) => {
+    return await UserModel.findOne({email: email}, excludedFields).lean().exec();
+};
+
 const generateToken = async (req, res, next) => {
     try {
         const emailInput = req.body.email;
@@ -68,6 +78,7 @@ const validateToken = async (req, res, next) => {
         }
         else {
             req.email = email;
+            req.user = await getUserWithEmail(email);
         }
 
         return next();

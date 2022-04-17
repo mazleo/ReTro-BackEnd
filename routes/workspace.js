@@ -14,10 +14,6 @@ const excludedFields = {
 
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~ HELPER FUNCTIONS START ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-const getUserWithEmail = async (email) => {
-    return await UserModel.findOne({email: email}, excludedFields).exec();
-};
-
 const respondWithServerError = (res) => {
     res.status(500).json({error:[{msg:"Server unable to process request."}]});
 }
@@ -97,7 +93,7 @@ const respondWithCreateFailure = (res) => {
 router.post('/', async (req, res, next) => {
     try {
         const email = req.email;
-        const user = await getUserWithEmail(email);
+        const user = req.user;
 
         const entityIdIndexer = await getEntityIdIndexer();
         if (!validateEntityIdIndexerExists(res, entityIdIndexer)) return;
@@ -110,11 +106,11 @@ router.post('/', async (req, res, next) => {
         if (!validateWorkspaceNameIsString(res, newWorkspaceName)) return;
         const newWorkspace = getNewWorkspace(newWorkspaceName, newWorkspaceColor);
 
-        let workspaces = user.get('workspaces');
-        if (!workspaces) workspaces = new Map();
-        workspaces.set(`${newWorkspaceId}`, newWorkspace);
+        let workspaces = user.workspaces;
+        if (!workspaces) workspaces = {};
+        workspaces[`${newWorkspaceId}`] = newWorkspace;
 
-        user.set('workspaces', workspaces);
+        user.workspaces = workspaces;
         const userUpdateResult = await updateUser(email, user);
 
         if (handleSuccessAndRespond(res, userUpdateResult, newWorkspace)) return;
@@ -134,9 +130,9 @@ router.post('/', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
     try {
         const email = req.email;
-        const user = await getUserWithEmail(email);
+        const user = req.user;
 
-        let workspaces = user.get('workspaces');
+        let workspaces = user.workspaces;
         if (workspaces == null) workspaces = {};
 
         res.status(200).json(workspaces);
