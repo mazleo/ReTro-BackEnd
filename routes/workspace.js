@@ -127,6 +127,27 @@ router.post('/', async (req, res, next) => {
     }
 });
 
+/**
+ * GET /
+ * @description Get all workspaces
+ */
+router.get('/', async (req, res, next) => {
+    try {
+        const email = req.email;
+        const user = await getUserWithEmail(email);
+
+        let workspaces = user.get('workspaces');
+        if (workspaces == null) workspaces = {};
+
+        res.status(200).json(workspaces);
+    }
+    catch (error) {
+        console.error(error);
+        respondWithServerError(res);
+        return;
+    }
+});
+
 /** ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTES END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 module.exports = router;
